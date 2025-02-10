@@ -1,101 +1,280 @@
-import Image from "next/image";
+"use client";
+
+import { useState, useEffect } from "react";
+import { v4 as uuidv4 } from "uuid";
+import Sidebar from "@/components/Sidebar";
+import MessageComponent from "@/components/Message";
+import ChatInput from "@/components/ChatInput";
+import { Conversation, Message } from "@/types";
+import {
+	saveConversation,
+	getConversations,
+	deleteConversation,
+} from "@/lib/storage";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+	const [conversations, setConversations] = useState<
+		Record<string, Conversation>
+	>({});
+	const [currentId, setCurrentId] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(false);
+	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+	const [settings, setSettings] = useState({
+		temperature: 0.7,
+		maxOutputTokens: 4096,
+		systemMessage: "You are a knowledgeable and articulate AI assistant...",
+	});
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+	useEffect(() => {
+		setConversations(getConversations());
+	}, []);
+
+	const handleNewChat = () => {
+		const newId = uuidv4();
+		const newConversation: Conversation = {
+			id: newId,
+			title: "New Chat",
+			messages: [],
+			createdAt: new Date().toISOString(),
+		};
+
+		setConversations((prev) => ({
+			...prev,
+			[newId]: newConversation,
+		}));
+		setCurrentId(newId);
+		saveConversation(newConversation);
+	};
+
+	const handleDeleteConversation = (id: string) => {
+		const updatedConversations = { ...conversations };
+		delete updatedConversations[id];
+		setConversations(updatedConversations);
+		deleteConversation(id);
+
+		if (currentId === id) {
+			// If we're deleting the current conversation, set currentId to null
+			// or to the most recent conversation if one exists
+			const remainingIds = Object.keys(updatedConversations);
+			if (remainingIds.length > 0) {
+				// Get the most recent conversation
+				const mostRecentId = remainingIds.sort(
+					(a, b) =>
+						new Date(updatedConversations[b].createdAt).getTime() -
+						new Date(updatedConversations[a].createdAt).getTime(),
+				)[0];
+				setCurrentId(mostRecentId);
+			} else {
+				setCurrentId(null);
+			}
+		}
+	};
+
+	const handleSettingsChange = (newSettings: typeof settings) => {
+		setSettings(newSettings);
+	};
+
+	const handleSendMessage = async (content: string) => {
+		if (!content.trim()) return;
+
+		let activeId = currentId;
+		let currentConversation: Conversation;
+
+		// Always create a new chat if there isn't one
+		if (!currentId) {
+			const newId = uuidv4();
+			currentConversation = {
+				id: newId,
+				title: content.slice(0, 30) + (content.length > 30 ? "..." : ""),
+				messages: [],
+				createdAt: new Date().toISOString(),
+			};
+
+			setConversations((prev) => ({
+				...prev,
+				[newId]: currentConversation,
+			}));
+			setCurrentId(newId);
+			saveConversation(currentConversation);
+			activeId = newId;
+		} else {
+			currentConversation = conversations[currentId];
+		}
+
+		setIsLoading(true);
+		const messageId = uuidv4();
+		const userMessage: Message = {
+			id: messageId,
+			content,
+			role: "user",
+		};
+
+		// Get current conversation
+		const updatedConv = {
+			...currentConversation,
+			messages: [...currentConversation.messages, userMessage],
+		};
+
+		// Update title if it's the first message
+		if (updatedConv.messages.length === 1) {
+			updatedConv.title =
+				content.slice(0, 30) + (content.length > 30 ? "..." : "");
+		}
+
+		// Update UI immediately with user message
+		setConversations((prev) => ({
+			...prev,
+			[activeId as string]: updatedConv,
+		}));
+		saveConversation(updatedConv);
+
+		try {
+			const response = await fetch("/api/chat", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					messages: [
+						{
+							role: "system",
+							content: settings.systemMessage,
+						},
+						...updatedConv.messages.map((msg) => ({
+							role: msg.role,
+							content: msg.content,
+						})),
+					],
+					prompt: content,
+					settings: {
+						temperature: settings.temperature,
+						maxOutputTokens: settings.maxOutputTokens,
+					},
+				}),
+			});
+
+			if (!response.ok) throw new Error("Failed to send message");
+
+			const reader = response.body?.getReader();
+			if (!reader) throw new Error("No response reader");
+
+			const decoder = new TextDecoder();
+			let assistantContent = "";
+			const assistantMessage: Message = {
+				id: uuidv4(),
+				content: "",
+				role: "assistant",
+			};
+
+			while (true) {
+				const { done, value } = await reader.read();
+				if (done) break;
+
+				const chunk = decoder.decode(value);
+				const lines = chunk.split("\n");
+
+				for (const line of lines) {
+					if (line.startsWith("data: ")) {
+						try {
+							const data = JSON.parse(line.slice(6));
+							if (data.text) {
+								assistantContent += data.text;
+								assistantMessage.content = assistantContent;
+
+								// Update conversation in real-time
+								const realtimeConv = {
+									...updatedConv,
+									messages: [...updatedConv.messages, { ...assistantMessage }],
+								};
+								setConversations((prev) => ({
+									...prev,
+									[activeId as string]: realtimeConv,
+								}));
+							}
+						} catch (e) {
+							console.error("Error parsing chunk:", e);
+						}
+					}
+				}
+			}
+
+			const finalConversation = {
+				...updatedConv,
+				messages: [...updatedConv.messages, assistantMessage],
+			};
+
+			setConversations((prev) => ({
+				...prev,
+				[activeId as string]: finalConversation,
+			}));
+			saveConversation(finalConversation);
+		} catch (error) {
+			console.error("Error:", error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	return (
+		<main className="flex h-screen bg-gray-900 overflow-hidden">
+			<div
+				className={`flex flex-shrink-0 transition-all duration-300 relative ${isSidebarOpen ? "w-80" : "w-0"}`}
+			>
+				<Sidebar
+					conversations={conversations}
+					currentId={currentId}
+					onSelect={setCurrentId}
+					onNew={handleNewChat}
+					onDelete={handleDeleteConversation}
+					onSettingsChange={handleSettingsChange}
+					className={`${isSidebarOpen ? "w-full" : "w-0 hidden"}`}
+				/>
+				<button
+					onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+					className={`absolute top-4 ${isSidebarOpen ? "right-2" : "left-2"} p-2 hover:bg-white/5 rounded-lg transition-colors z-50 bg-gray-800/50`}
+				>
+					<svg
+						className="w-6 h-6"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							strokeWidth={2}
+							d={isSidebarOpen ? "M15 19l-7-7 7-7" : "M9 5l7 7-7 7"}
+						/>
+					</svg>
+				</button>
+			</div>
+
+			<div className="flex-1 flex flex-col items-center bg-gray-900">
+				<div className="w-full max-w-4xl flex-1 flex flex-col h-full">
+					<div className="flex-1 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
+						{currentId && conversations[currentId]?.messages.length > 0 ? (
+							conversations[currentId]?.messages.map((message) => (
+								<MessageComponent
+									key={message.id}
+									content={message.content}
+									role={message.role}
+									onCopy={() => navigator.clipboard.writeText(message.content)}
+								/>
+							))
+						) : (
+							<div className="h-full flex flex-col items-center justify-center text-gray-400">
+								<h2 className="text-2xl font-semibold mb-2">
+									Welcome to Chat with Gemini! 👋
+								</h2>
+								<p className="text-lg">What can I help you with today?</p>
+							</div>
+						)}
+					</div>
+					<div className="w-full">
+						<ChatInput onSubmit={handleSendMessage} isLoading={isLoading} />
+					</div>
+				</div>
+			</div>
+		</main>
+	);
 }

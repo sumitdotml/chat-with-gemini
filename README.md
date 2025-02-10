@@ -1,36 +1,164 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Chat with Gemini
 
-## Getting Started
+A full-stack chat application built with Next.js, FastAPI, and Google's Gemini Pro model. Features a modern UI, conversation history, and customizable AI settings.
 
-First, run the development server:
+I just thought I wanted to try this since the Gemini API is free. Work pretty well.
+
+#
+
+## Features
+
+- 💬 Real-time streaming chat responses
+- 🔄 Persistent conversation history
+- ⚙️ Customizable AI parameters
+- 📱 Responsive design
+- 🎨 Modern UI with dark mode
+- 🔧 Advanced settings for fine-tuning responses
+
+---
+
+## Prerequisites
+
+- Node.js (v18 or higher)
+- Python (v3.8 or higher)
+- Google Gemini API key ([Get one here](https://ai.google.dev/gemini-api/docs/api-key))
+
+---
+
+## Project Structure
+
+```bash
+chat-app/
+├── app/ # Next.js frontend
+├── backend/ # FastAPI backend
+└── README.md
+```
+
+---
+
+## Setup Instructions
+
+### 1. Backend Setup
+
+```bash
+cd backend
+```
+
+Create and activate virtual environment
+
+```bash
+python -m venv venv
+source venv/bin/activate # On Windows: venv\Scripts\activate
+```
+
+Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+Create .env file (this ought to be in the root directory of the backend folder)
+
+```bash
+echo "GEMINI_API_KEY=your_api_key_here" > .env
+```
+
+#
+
+### 2. Frontend Setup
+
+```bash
+# In the root directory
+npm install
+```
+
+#
+
+### 3. Running the Application
+
+1. Start the backend server from the backend folder:
+
+```bash
+cd backend
+uvicorn main:app --reload
+```
+
+2. In a new terminal, start the frontend (this should be in the root directory of our project)
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+3. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Configuration
 
-## Learn More
+### Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+Backend (`.env`):
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+GEMINI_API_KEY=your_api_key_here
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+#
 
-## Deploy on Vercel
+### AI Settings
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Through the settings at the sidebar, you can customize:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Temperature (0-1): Controls response creativity
+- Max Output Tokens (100-8192): Limits response length(8192 is the maximum allowed by the Gemini-2.0-Flash API)
+- System Message: Sets AI personality and behavior
+- Top-p, Top-k: Advanced response sampling parameters
+
+---
+
+## Development
+
+### Key Files
+
+- `app/page.tsx`: Main chat interface
+- `backend/routers/chat.py`: Chat endpoint handler
+- `backend/models/gemini.py`: Gemini model integration
+- `app/components/Settings.tsx`: AI settings configuration
+
+---
+
+### API Endpoints
+
+- `POST /chat`: Main chat endpoint
+  - Accepts: Messages history, prompt, and settings
+  - Returns: Server-sent events stream with AI responses
+
+---
+
+## Troubleshooting
+
+1. If you get a 422 error:
+
+   - Ensure your request format matches the expected schema
+   - Check if all required fields are present
+
+2. If the backend fails to start:
+
+   - Verify your GEMINI_API_KEY is set correctly
+   - Ensure all dependencies are installed
+
+3. If the frontend can't connect:
+   - Check if the backend is running on port 8000
+   - Verify CORS settings in `backend/main.py`
+
+---
+
+## Contributing
+
+Feel free to submit issues and pull requests!
+
+---
+
+## License
+
+MIT
