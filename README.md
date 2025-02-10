@@ -1,6 +1,6 @@
 # Chat with Gemini
 
-A full-stack chat application built with Next.js, FastAPI, and Google's Gemini Pro model. Features a modern UI, conversation history, and customizable AI settings.
+A full-stack chat application built with Next.js, FastAPI, and Google's Gemini 2.0 Flash model. Features a modern UI, conversation history, and customizable AI settings.
 
 I just thought I wanted to try this since the Gemini API is free. Work pretty well.
 
@@ -150,6 +150,14 @@ Through the settings at the sidebar, you can customize:
 3. If the frontend can't connect:
    - Check if the backend is running on port 8000
    - Verify CORS settings in `backend/main.py`
+
+---
+
+## Streamlit App
+
+If you want to try the Gemini API without all the frontend and backend stuff (just want to test it out quickly), you can use the streamlit app in the [streamlit](./streamlit/) directory.
+
+The setup instructions are in the [README.md](./streamlit/README.md) file of the streamlit directory. Very simple.
 
 ---
 
