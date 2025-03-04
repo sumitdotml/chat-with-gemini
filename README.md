@@ -2,7 +2,9 @@
 
 A full-stack chat application built with Next.js, FastAPI, and Google's Gemini 2.0 Flash model. Features a modern UI, conversation history, and customizable AI settings.
 
-I just thought I wanted to try this since the Gemini API is free. Work pretty well.
+<img src="./public/screenshot-as-of-2025-03-04.png" alt="Screenshot" width="800"/>
+
+I just thought I wanted to try this since the Gemini API is free. Works pretty well.
 
 ## Table of Contents
 1. [Features](#features)
