@@ -44,3 +44,13 @@ next-env.d.ts
 __pycache__
 .env
 .venv
+
+# conversation data
+/conversations/
+/logs/
+localStorage/
+
+# streamlit
+/streamlit/conversations/
+/streamlit/logs/
+/streamlit/localStorage/

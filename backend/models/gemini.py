@@ -16,7 +16,7 @@ class GeminiModel:
         prompt: str,
         temperature: float = 0.7,
         top_p: float = 0.95,
-        max_output_tokens: int = 4096,
+        max_output_tokens: int = 8192,
     ):
         response = self.model.generate_content(
             prompt,

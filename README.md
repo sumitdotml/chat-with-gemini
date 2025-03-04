@@ -36,7 +36,83 @@ chat-app/
 
 ---
 
-## Setup Instructions
+## Quick Setup (Recommended)
+
+### For macOS/Linux:
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/sumitdotml/chat-with-gemini.git
+cd chat-with-gemini
+```
+
+2. Run the installation script:
+   ```bash
+   chmod +x install.sh
+   ./install.sh
+   ```
+
+3. Add your Gemini API key to the `.env` file in the backend directory (get your API key [here](https://ai.google.dev/gemini-api/docs/api-key)).
+
+```bash
+cd backend
+```
+
+The `.env` file should look like this:
+
+```bash
+GEMINI_API_KEY=your_api_key_here # should be a long string of characters
+```
+
+4. Start the application:
+   ```bash
+   chmod +x run.sh
+   ./run.sh
+   ```
+
+### For Windows:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/sumitdotml/chat-with-gemini.git
+   cd chat-with-gemini
+   ```   
+2. Run the installation script:
+   ```bash
+   install.bat
+   ```
+3. Start the application:
+   ```bash
+   run.bat
+   ```
+
+The installation script will:
+- Install frontend dependencies
+- Set up the Python virtual environment
+- Install backend dependencies
+- Prompt you for your Gemini API key
+
+The run script will:
+- Start the backend server on http://localhost:8000
+- Start the frontend on http://localhost:3000
+
+You can also run just the backend or frontend:
+```bash
+# macOS/Linux
+./run.sh backend
+./run.sh frontend
+
+# Windows
+run.bat backend
+run.bat frontend
+```
+
+---
+
+## Manual Setup Instructions
+
+If you prefer to set up manually, follow these steps:
 
 ### 1. Backend Setup
 
@@ -47,8 +123,8 @@ cd backend
 Create and activate virtual environment
 
 ```bash
-python -m venv venv
-source venv/bin/activate # On Windows: venv\Scripts\activate
+python -m venv .venv
+source .venv/bin/activate # On Windows: .venv\Scripts\activate
 ```
 
 Install dependencies
@@ -158,6 +234,38 @@ Through the settings at the sidebar, you can customize:
 If you want to try the Gemini API without all the frontend and backend stuff (just want to test it out quickly), you can use the streamlit app in the [streamlit](./streamlit/) directory.
 
 The setup instructions are in the [README.md](./streamlit/README.md) file of the streamlit directory. Very simple.
+
+---
+
+## Conversation Data Storage
+
+### Where are conversations saved?
+
+This application stores conversation data in two different ways depending on which interface you're using:
+
+1. **Next.js Web Interface**: 
+   - Conversations are stored in your browser's localStorage
+   - The data is saved under the key "chat-conversations"
+   - This data persists between browser sessions but is limited to the browser you're using
+   - Data is stored locally on your device and not sent to any remote servers (except for the actual messages sent to the Gemini API)
+
+2. **Streamlit Interface**:
+   - Conversations are stored as JSON files in the `/conversations` directory
+   - Each conversation is saved as a separate file with the conversation ID as the filename
+   - These files contain the full conversation history including all messages
+
+### Privacy and Data Security
+
+- All conversation data is stored locally on your device
+- The `.gitignore` file is configured to exclude conversation data from being pushed to remote repositories
+- The following directories are excluded from git (in case you're using the streamlit interface):
+  - `/conversations/` - Contains Streamlit conversation files
+  - `/logs/` - Contains application logs
+  - `localStorage/` - For any exported browser localStorage data
+
+If you want to completely remove your conversation history:
+- For the Next.js interface: Clear your browser's localStorage (inspect element -> application -> storage -> Local storage -> right click on localhost:3000 -> clear) or use the "X" button in the sidebar
+- For the Streamlit interface: Delete the files in the `/conversations` directory
 
 ---
 

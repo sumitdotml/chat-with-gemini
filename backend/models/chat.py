@@ -9,7 +9,7 @@ class Message(BaseModel):
 
 class ChatSettings(BaseModel):
     temperature: float = 0.7
-    maxOutputTokens: int = 4096
+    maxOutputTokens: int = 8192
 
 
 class ChatRequest(BaseModel):

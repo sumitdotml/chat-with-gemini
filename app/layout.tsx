@@ -15,7 +15,7 @@ export default function RootLayout({
 					rel="stylesheet"
 				/>
 			</head>
-			<body className="bg-[#0F1117] text-gray-100 font-sans">{children}</body>
+			<body className="bg-[#0F1117] text-gray-100 font-sans overflow-x-hidden">{children}</body>
 		</html>
 	);
 }

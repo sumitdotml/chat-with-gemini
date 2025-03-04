@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { v4 as uuidv4 } from "uuid";
 import Sidebar from "@/components/Sidebar";
 import MessageComponent from "@/components/Message";
@@ -21,7 +21,7 @@ export default function Home() {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 	const [settings, setSettings] = useState({
 		temperature: 0.7,
-		maxOutputTokens: 4096,
+		maxOutputTokens: 8192,
 		systemMessage: "You are a knowledgeable and articulate AI assistant...",
 	});
 
@@ -217,6 +217,7 @@ export default function Home() {
 
 	return (
 		<main className="flex h-screen bg-gray-900 overflow-hidden">
+			{/* Sidebar */}
 			<div
 				className={`flex flex-shrink-0 transition-all duration-300 relative ${isSidebarOpen ? "w-80" : "w-0"}`}
 			>
@@ -249,9 +250,12 @@ export default function Home() {
 				</button>
 			</div>
 
+			{/* Main content area */}
 			<div className="flex-1 flex flex-col items-center bg-gray-900">
-				<div className="w-full max-w-4xl flex-1 flex flex-col h-full">
-					<div className="flex-1 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
+				<div className="w-full flex-1 flex flex-col h-full overflow-hidden">
+					{/* Chat messages container */}
+					<div className="flex-1 overflow-y-auto px-4 py-4 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent w-full">
+						<div className="max-w-5xl w-full mx-auto lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
 						{currentId && conversations[currentId]?.messages.length > 0 ? (
 							conversations[currentId]?.messages.map((message) => (
 								<MessageComponent
@@ -262,16 +266,20 @@ export default function Home() {
 								/>
 							))
 						) : (
-							<div className="h-full flex flex-col items-center justify-center text-gray-400">
-								<h2 className="text-2xl font-semibold mb-2">
-									Welcome to Chat with Gemini! 👋
-								</h2>
-								<p className="text-lg">What can I help you with today?</p>
+							<div className="h-full flex flex-col items-center justify-center min-h-[70vh]">
+								<div className="p-10 rounded-lg border border-gray-700/30 backdrop-blur-sm transition-all">
+									<h2 className="text-3xl mb-4 text-center text-white font-mono tracking-tight">
+										Welcome to Chat with Gemini 👋
+									</h2>
+									<p className="text-lg text-center text-gray-400">What can I help you with today?</p>
+								</div>
 							</div>
 						)}
+						</div>
 					</div>
-					<div className="w-full">
-						<ChatInput onSubmit={handleSendMessage} isLoading={isLoading} />
+					{/* Chat input area */}
+					<div className="w-full max-w-5xl mx-auto px-4 lg:max-w-3xl xl:max-w-4xl 2xl:max-w-5xl">
+						<ChatInput onSubmit={handleSendMessage} disabled={isLoading} />
 					</div>
 				</div>
 			</div>
