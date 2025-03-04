@@ -89,7 +89,7 @@ export default function ChatInput({ onSubmit, disabled }: ChatInputProps) {
         
         <div className="text-center mt-2">
           <a 
-            href="https://github.com/yourusername/gemini-chat-app" 
+            href="https://github.com/sumitdotml/chat-with-gemini" 
             target="_blank" 
             rel="noopener noreferrer"
             className="text-xs text-gray-400 hover:text-indigo-400 transition-colors inline-flex items-center gap-1"

@@ -4,9 +4,21 @@ A full-stack chat application built with Next.js, FastAPI, and Google's Gemini 2
 
 I just thought I wanted to try this since the Gemini API is free. Work pretty well.
 
+## Table of Contents
+1. [Features](#features)
+2. [Prerequisites](#prerequisites)
+3. [Project Structure](#project-structure)
+4. [Installation](#installation)
+5. [Configuration](#configuration)
+6. [AI Settings](#ai-settings)
+7. [Development](#development)
+8. [Streamlit App](#streamlit-app)
+9. [Conversation Data Storage](#conversation-data-storage)
+10. [License](#license)
+
 #
 
-## Features
+## Features <a name="features"></a>
 
 - 💬 Real-time streaming chat responses
 - 🔄 Persistent conversation history
@@ -17,7 +29,7 @@ I just thought I wanted to try this since the Gemini API is free. Work pretty we
 
 ---
 
-## Prerequisites
+## Prerequisites <a name="prerequisites"></a>
 
 - Node.js (v18 or higher)
 - Python (v3.8 or higher)
@@ -25,20 +37,33 @@ I just thought I wanted to try this since the Gemini API is free. Work pretty we
 
 ---
 
-## Project Structure
+## Project Structure <a name="project-structure"></a>
 
 ```bash
 chat-app/
 ├── app/ # Next.js frontend
 ├── backend/ # FastAPI backend
+├── streamlit/ # Streamlit app
+├── public/ # Static files
+├── install.sh # Installation script for macOS/Linux
+├── run.sh # Run script for macOS/Linux
+├── install.bat # Installation script for Windows
+├── run.bat # Run script for Windows
 └── README.md
 ```
 
 ---
 
-## Quick Setup (Recommended)
+## Installation <a name="installation"></a>
 
-### For macOS/Linux:
+There are two ways to install this application:
+
+1. Through the installation script
+2. The OCD way, where you set up everything manually
+
+### 1. Installation through the installation script
+
+#### For macOS/Linux:
 
 1. Clone the repository:
 
@@ -53,25 +78,15 @@ cd chat-with-gemini
    ./install.sh
    ```
 
-3. Add your Gemini API key to the `.env` file in the backend directory (get your API key [here](https://ai.google.dev/gemini-api/docs/api-key)).
+During the installation, you will be prompted to enter your Gemini API key.
 
-```bash
-cd backend
-```
-
-The `.env` file should look like this:
-
-```bash
-GEMINI_API_KEY=your_api_key_here # should be a long string of characters
-```
-
-4. Start the application:
+3. Start the application:
    ```bash
    chmod +x run.sh
    ./run.sh
    ```
 
-### For Windows:
+#### For Windows:
 
 1. Clone the repository:
    ```bash
@@ -91,7 +106,6 @@ The installation script will:
 - Install frontend dependencies
 - Set up the Python virtual environment
 - Install backend dependencies
-- Prompt you for your Gemini API key
 
 The run script will:
 - Start the backend server on http://localhost:8000
@@ -110,11 +124,11 @@ run.bat frontend
 
 ---
 
-## Manual Setup Instructions
+### 2. Manual Setup Instructions
 
-If you prefer to set up manually, follow these steps:
+If you have extreme OCD like me and prefer to set up manually so that you feel like you have control over your life, follow these steps:
 
-### 1. Backend Setup
+#### 1. Backend Setup
 
 ```bash
 cd backend
@@ -125,12 +139,19 @@ Create and activate virtual environment
 ```bash
 python -m venv .venv
 source .venv/bin/activate # On Windows: .venv\Scripts\activate
+
+# or if you're using uv for dependency management (recommended)
+uv venv
+source .venv/bin/activate # On Windows: .venv\Scripts\activate
 ```
 
 Install dependencies
 
 ```bash
 pip install -r requirements.txt
+
+# or if you're using uv for dependency management (recommended)
+uv pip install -r requirements.txt
 ```
 
 Create .env file (this ought to be in the root directory of the backend folder)
@@ -141,7 +162,7 @@ echo "GEMINI_API_KEY=your_api_key_here" > .env
 
 #
 
-### 2. Frontend Setup
+#### 2. Frontend Setup
 
 ```bash
 # In the root directory
@@ -150,7 +171,7 @@ npm install
 
 #
 
-### 3. Running the Application
+#### 3. Running the Application
 
 1. Start the backend server from the backend folder:
 
@@ -169,7 +190,7 @@ npm run dev
 
 ---
 
-## Configuration
+## Configuration <a name="configuration"></a>
 
 ### Environment Variables
 
@@ -181,18 +202,18 @@ GEMINI_API_KEY=your_api_key_here
 
 #
 
-### AI Settings
+### AI Settings <a name="ai-settings"></a>
 
 Through the settings at the sidebar, you can customize:
 
 - Temperature (0-1): Controls response creativity
-- Max Output Tokens (100-8192): Limits response length(8192 is the maximum allowed by the Gemini-2.0-Flash API)
+- Max Output Tokens (100-8192): Limits response length (8192 is the maximum allowed by the Gemini-2.0-Flash API)
 - System Message: Sets AI personality and behavior
 - Top-p, Top-k: Advanced response sampling parameters
 
 ---
 
-## Development
+## Development <a name="development"></a>
 
 ### Key Files
 
@@ -211,25 +232,7 @@ Through the settings at the sidebar, you can customize:
 
 ---
 
-## Troubleshooting
-
-1. If you get a 422 error:
-
-   - Ensure your request format matches the expected schema
-   - Check if all required fields are present
-
-2. If the backend fails to start:
-
-   - Verify your GEMINI_API_KEY is set correctly
-   - Ensure all dependencies are installed
-
-3. If the frontend can't connect:
-   - Check if the backend is running on port 8000
-   - Verify CORS settings in `backend/main.py`
-
----
-
-## Streamlit App
+## Streamlit App <a name="streamlit-app"></a>
 
 If you want to try the Gemini API without all the frontend and backend stuff (just want to test it out quickly), you can use the streamlit app in the [streamlit](./streamlit/) directory.
 
@@ -237,7 +240,7 @@ The setup instructions are in the [README.md](./streamlit/README.md) file of the
 
 ---
 
-## Conversation Data Storage
+## Conversation Data Storage <a name="conversation-data-storage"></a>
 
 ### Where are conversations saved?
 
@@ -269,12 +272,6 @@ If you want to completely remove your conversation history:
 
 ---
 
-## Contributing
-
-Feel free to submit issues and pull requests!
-
----
-
-## License
+## License <a name="license"></a>
 
 MIT
