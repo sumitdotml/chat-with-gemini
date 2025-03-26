@@ -14,9 +14,7 @@ I just thought I wanted to try this since the Gemini API is free. Works pretty w
 5. [Configuration](#configuration)
 6. [AI Settings](#ai-settings)
 7. [Development](#development)
-8. [Streamlit App](#streamlit-app)
-9. [Conversation Data Storage](#conversation-data-storage)
-10. [License](#license)
+8. [Conversation Data Storage](#conversation-data-storage)
 
 #
 
@@ -35,7 +33,7 @@ I just thought I wanted to try this since the Gemini API is free. Works pretty w
 ## Prerequisites <a name="prerequisites"></a>
 
 - Node.js (v18 or higher)
-- Python (v3.8 or higher)
+- Python (v3.9 or higher)
 - Google Gemini API key ([Get one here](https://ai.google.dev/gemini-api/docs/api-key))
 
 ---
@@ -144,7 +142,7 @@ python -m venv .venv
 source .venv/bin/activate # On Windows: .venv\Scripts\activate
 
 # or if you're using uv for dependency management (recommended)
-uv venv
+uv venv --python 3.11
 source .venv/bin/activate # On Windows: .venv\Scripts\activate
 ```
 
