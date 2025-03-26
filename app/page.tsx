@@ -21,7 +21,7 @@ export default function Home() {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 	const [settings, setSettings] = useState({
 		temperature: 0.7,
-		maxOutputTokens: 8192,
+		maxOutputTokens: 64000,
 		systemMessage: "You are a knowledgeable and articulate AI assistant...",
 	});
 

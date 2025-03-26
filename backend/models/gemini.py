@@ -8,7 +8,7 @@ load_dotenv()
 class GeminiModel:
     def __init__(self):
         genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-        self.model = genai.GenerativeModel("gemini-2.0-flash")
+        self.model = genai.GenerativeModel("gemini-2.5-pro-exp-03-25")
         self.chat = self.model.start_chat(history=[])
 
     async def generate_stream(

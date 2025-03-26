@@ -20,6 +20,9 @@ export default function Message({ content, role, onCopy }: MessageProps) {
   const [copiedBlockIndex, setCopiedBlockIndex] = useState<number | null>(null);
   const codeRefs = useRef<(HTMLPreElement | null)[]>([]);
   
+  // Sanitize content to remove problematic HTML tags
+  const sanitizedContent = content.replace(/<module.*?>|<\/module>/g, '');
+  
   // Reset code refs on content change
   useEffect(() => {
     codeRefs.current = [];
@@ -223,7 +226,7 @@ export default function Message({ content, role, onCopy }: MessageProps) {
                 code: ({ inline, ...props }: CodeProps) => inline ? inlineCodeRenderer(props) : <code {...props} />,
               }}
             >
-              {content}
+              {sanitizedContent}
             </ReactMarkdown>
           </div>
         ) : (
@@ -249,7 +252,7 @@ export default function Message({ content, role, onCopy }: MessageProps) {
                 ),
               }}
             >
-              {content}
+              {sanitizedContent}
             </ReactMarkdown>
           </div>
         )}

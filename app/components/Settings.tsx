@@ -12,7 +12,7 @@ export default function Settings({ onSettingsChange }: SettingsProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
   const [temperature, setTemperature] = useState(0.7);
-  const [maxOutputTokens, setMaxOutputTokens] = useState(8192);
+  const [maxOutputTokens, setMaxOutputTokens] = useState(64000);
   const [systemMessage, setSystemMessage] = useState(
     "You are a knowledgeable and articulate AI assistant. Maintain a natural, conversational tone while providing accurate and thoughtful responses. Aim for clarity and precision in your explanations, using plain language that's easy to understand. Create some sort of opening sentence or two that sets the tone for the conversation. While you can occasionally use an emoji when truly appropriate, prefer clear writing over decorative elements. Structure your responses in a logical way, and feel free to use examples or analogies when they help illustrate complex concepts. Of course, you can be approachable and friendly, but do not try to sound too enthusiastic or casual. Always respond in English, unless the user asks you to respond in a different language.",
   );
@@ -80,8 +80,8 @@ export default function Settings({ onSettingsChange }: SettingsProps) {
             <input
               type="range"
               min="100"
-              max="8192"
-              step="1"
+              max="64000"
+              step="100"
               value={maxOutputTokens}
               onChange={(e) =>
                 handleChange(setMaxOutputTokens, parseInt(e.target.value))
